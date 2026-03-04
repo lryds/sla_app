@@ -24,10 +24,19 @@ jobs:
           pip install "flet==0.21.2"
           pip install "requests"
 
-      # 👇 重点：加入终极热补丁，强行屏蔽底层的 unicode 报错
-      - name: Patch unicode bug
+      # 👇 重点：补丁升级版！完美兼容底层的错乱参数
+      - name: Patch unicode bug (Advanced)
         run: |
-          echo "import builtins; builtins.unicode = str" > sitecustomize.py
+          cat << 'EOF' > sitecustomize.py
+          import builtins
+          def mock_unicode(data, encoding='utf-8', errors='strict'):
+              if encoding is None:
+                  encoding = 'utf-8'
+              if isinstance(data, bytes):
+                  return data.decode(encoding, errors)
+              return str(data)
+          builtins.unicode = mock_unicode
+          EOF
           echo "PYTHONPATH=$PWD" >> $GITHUB_ENV
 
       - name: Setup Java 17
@@ -46,9 +55,6 @@ jobs:
       - name: Accept Android licenses
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager \
-            "platforms;android-34" \
-            "build-tools;34.0.0" || true
 
       - name: Disable Flutter analytics
         run: flutter config --no-analytics
