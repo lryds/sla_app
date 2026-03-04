@@ -24,7 +24,6 @@ jobs:
           pip install "flet==0.21.2"
           pip install "requests"
 
-      # 👇 重点：补丁升级版！完美兼容底层的错乱参数
       - name: Patch unicode bug (Advanced)
         run: |
           cat << 'EOF' > sitecustomize.py
@@ -58,6 +57,15 @@ jobs:
 
       - name: Disable Flutter analytics
         run: flutter config --no-analytics
+
+      # 👇 这是为你新增的护航步骤：自动删除 requirements.txt 里的所有空行、回车和多余空格
+      - name: Clean requirements.txt
+        run: |
+          if [ -f "requirements.txt" ]; then
+            sed -i 's/\r$//' requirements.txt
+            sed -i '/^[[:space:]]*$/d' requirements.txt
+            sed -i 's/^[ \t]*//;s/[ \t]*$//' requirements.txt
+          fi
 
       - name: Build APK
         run: flet build apk
