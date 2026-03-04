@@ -1,0 +1,7 @@
+[tool.flet]
+app_name = "SalaryApp"
+app_version = "1.0.0"
+org = "com.salary.app"
+
+[tool.flet.android]
+min_sdk_version = 21
