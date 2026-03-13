@@ -142,13 +142,6 @@ def main(page: ft.Page):
                     [
                         welcome_name_text,
                         welcome_sub_text,
-                        ft.Row(
-                            [
-                                info_chip("鲜艳莫兰迪", "#FFFFFF26", "white"),
-                                info_chip("安全查询", "#FFFFFF26", "white"),
-                            ],
-                            spacing=8,
-                        ),
                     ],
                     spacing=4,
                     expand=True,
@@ -817,3 +810,4 @@ def main(page: ft.Page):
 
 # ✅ 安卓打包/运行推荐写法
 ft.app(target=main)
+
